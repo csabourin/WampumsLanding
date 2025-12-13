@@ -1497,15 +1497,15 @@
                 localStorage.setItem('user_id', loginData.user_id);
 
                 // Redirect to the main app
-                window.location.href = 'https://demo.wampums.app/index.html';
+                window.location.href = 'https://demo.wampums.app/';
               } else {
                 // If login fails, just redirect to login page
-                window.location.href = 'https://demo.wampums.app/index.html';
+                window.location.href = 'https://demo.wampums.app/';
               }
             } catch (error) {
               console.error('Error authenticating:', error);
               // On error, just redirect to login page
-              window.location.href = 'https://demo.wampums.app/index.html';
+              window.location.href = 'https://demo.wampums.app/';
             }
           }, 2000);
         } else {
