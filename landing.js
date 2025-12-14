@@ -357,6 +357,7 @@ const demoRedirectForm = document.getElementById("demoRedirectForm");
 const demoBaseUrl = "https://demo.wampums.app";
 const demoDashboardUrl = `${demoBaseUrl}/dashboard`;
 const demoLoginUrl = `${demoBaseUrl}/public/login`;
+const demoLoginApiUrl = `${demoBaseUrl}/api/login`;
 
 // Get backend API URL - try to detect from current location
 const getApiUrl = () => {
@@ -492,7 +493,7 @@ demoForm.addEventListener("submit", async (e) => {
 			setTimeout(async () => {
 				try {
 					// Authenticate with demo credentials
-                                        const loginResponse = await fetch(demoLoginUrl, {
+                                        const loginResponse = await fetch(demoLoginApiUrl, {
                                                 method: "POST",
                                                 headers: {
                                                         "Content-Type": "application/json",
