@@ -357,7 +357,6 @@ const demoRedirectForm = document.getElementById("demoRedirectForm");
 const demoBaseUrl = "https://demo.wampums.app";
 const demoDashboardUrl = `${demoBaseUrl}/dashboard`;
 const demoLoginUrl = `${demoBaseUrl}/public/login`;
-const demoLoginApiUrl = `${demoBaseUrl}/api/login`;
 
 // Get backend API URL - try to detect from current location
 const getApiUrl = () => {
@@ -489,41 +488,34 @@ demoForm.addEventListener("submit", async (e) => {
 			formSuccess.classList.add("active");
 			demoForm.style.display = "none";
 
-			// Wait 2 seconds then authenticate and redirect to demo
-			setTimeout(async () => {
-				try {
-					// Authenticate with demo credentials
-                                        const loginResponse = await fetch(demoLoginApiUrl, {
-                                                method: "POST",
-                                                headers: {
-                                                        "Content-Type": "application/json",
-                                                },
-                                                body: JSON.stringify({
-                                                        email: "akela.demo@demo.com",
-                                                        password: "Aylmer2025",
-                                                }),
-                                        });
+			// Wait 2 seconds then redirect to demo login with auto-login params
+			setTimeout(() => {
+				// Create a form to POST credentials to the demo login page
+				// This allows the demo app to handle auth and set tokens on its own domain
+				const form = document.createElement('form');
+				form.method = 'POST';
+				form.action = demoLoginUrl;
 
-					const loginData = await loginResponse.json();
+				const emailInput = document.createElement('input');
+				emailInput.type = 'hidden';
+				emailInput.name = 'email';
+				emailInput.value = 'akela.demo@demo.com';
 
-                                        if (loginResponse.ok && loginData.success && loginData.token) {
-                                                // Store the token and redirect to the app
-                                                localStorage.setItem("token", loginData.token);
-                                                localStorage.setItem("user_role", loginData.user_role);
-                                                localStorage.setItem("user_full_name", loginData.user_full_name);
-                                                localStorage.setItem("user_id", loginData.user_id);
+				const passwordInput = document.createElement('input');
+				passwordInput.type = 'hidden';
+				passwordInput.name = 'password';
+				passwordInput.value = 'Aylmer2025';
 
-                                                // Redirect to the main app
-                                                window.location.href = demoDashboardUrl;
-                                        } else {
-                                                // If login fails, just redirect to login page
-                                                window.location.href = demoLoginUrl;
-                                        }
-                                } catch (error) {
-                                        console.error("Error authenticating:", error);
-                                        // On error, just redirect to login page
-                                        window.location.href = demoLoginUrl;
-                                }
+				const redirectInput = document.createElement('input');
+				redirectInput.type = 'hidden';
+				redirectInput.name = 'redirect';
+				redirectInput.value = '/dashboard';
+
+				form.appendChild(emailInput);
+				form.appendChild(passwordInput);
+				form.appendChild(redirectInput);
+				document.body.appendChild(form);
+				form.submit();
                         }, 2000);
                 } else {
 			// Show error
