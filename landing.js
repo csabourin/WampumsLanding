@@ -488,35 +488,45 @@ demoForm.addEventListener("submit", async (e) => {
 			formSuccess.classList.add("active");
 			demoForm.style.display = "none";
 
-			// Wait 2 seconds then redirect to demo login with auto-login params
-			setTimeout(() => {
-				// Create a form to POST credentials to the demo login page
-				// This allows the demo app to handle auth and set tokens on its own domain
-				const form = document.createElement('form');
-				form.method = 'POST';
-				form.action = demoLoginUrl;
+			// Wait 2 seconds then authenticate and redirect to demo
+			setTimeout(async () => {
+				try {
+					// Authenticate with demo credentials
+					const loginResponse = await fetch(demoLoginUrl, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						credentials: "include",
+						body: JSON.stringify({
+							email: "akela.demo@demo.com",
+							password: "Aylmer2025",
+						}),
+					});
 
-				const emailInput = document.createElement('input');
-				emailInput.type = 'hidden';
-				emailInput.name = 'email';
-				emailInput.value = 'akela.demo@demo.com';
+					const loginData = await loginResponse.json();
 
-				const passwordInput = document.createElement('input');
-				passwordInput.type = 'hidden';
-				passwordInput.name = 'password';
-				passwordInput.value = 'Aylmer2025';
-
-				const redirectInput = document.createElement('input');
-				redirectInput.type = 'hidden';
-				redirectInput.name = 'redirect';
-				redirectInput.value = '/dashboard';
-
-				form.appendChild(emailInput);
-				form.appendChild(passwordInput);
-				form.appendChild(redirectInput);
-				document.body.appendChild(form);
-				form.submit();
-                        }, 2000);
+					if (loginResponse.ok && loginData.success && loginData.token) {
+						// Redirect to dashboard with token and user data as URL parameters
+						// The dashboard app will read these and store in its own localStorage
+						const params = new URLSearchParams({
+							token: loginData.token,
+							user_role: loginData.user_role || '',
+							user_full_name: loginData.user_full_name || '',
+							user_id: loginData.user_id || '',
+						});
+						window.location.href = `${demoDashboardUrl}?${params.toString()}`;
+					} else {
+						// If login fails, redirect to login page
+						console.error("Login failed:", loginData);
+						window.location.href = demoLoginUrl;
+					}
+				} catch (error) {
+					console.error("Error authenticating:", error);
+					// On error, redirect to login page
+					window.location.href = demoLoginUrl;
+				}
+			}, 2000);
                 } else {
 			// Show error
 			alert(
