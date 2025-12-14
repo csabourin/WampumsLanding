@@ -354,15 +354,21 @@ const demoModal = document.getElementById("demoModal");
 const demoForm = document.getElementById("demoForm");
 const formSuccess = document.getElementById("formSuccess");
 const demoRedirectForm = document.getElementById("demoRedirectForm");
+const demoBaseUrl = "https://demo.wampums.app";
+const demoDashboardUrl = `${demoBaseUrl}/dashboard`;
+const demoLoginUrl = `${demoBaseUrl}/public/login`;
 
 // Get backend API URL - try to detect from current location
 const getApiUrl = () => {
-	// If on wampums.app, use the demo API instance
-	if (window.location.hostname === "wampums.app") {
-		return "https://demo.wampums.app/api/contact-demo";
-	}
-	// For local development or other domains
-	return window.location.origin + "/api/contact-demo";
+        // If on wampums.app, use the demo API instance
+        if (
+                window.location.hostname === "wampums.app" ||
+                window.location.hostname.endsWith(".wampums.app")
+        ) {
+                return `${demoBaseUrl}/api/contact-demo`;
+        }
+        // For local development or other domains
+        return window.location.origin + "/api/contact-demo";
 };
 
 // Open modal
@@ -377,15 +383,16 @@ document.querySelectorAll("[data-open-demo-modal]").forEach((button) => {
 
 // Close modal
 const closeModal = () => {
-	demoModal.classList.remove("active");
-	demoModal.setAttribute("aria-hidden", "true");
-	// Reset form
-	demoForm.reset();
-	formSuccess.classList.remove("active");
-	// Clear errors
-	document.querySelectorAll(".form-group.error").forEach((group) => {
-		group.classList.remove("error");
-	});
+        demoModal.classList.remove("active");
+        demoModal.setAttribute("aria-hidden", "true");
+        // Reset form
+        demoForm.reset();
+        demoForm.style.display = "";
+        formSuccess.classList.remove("active");
+        // Clear errors
+        document.querySelectorAll(".form-group.error").forEach((group) => {
+                group.classList.remove("error");
+        });
 };
 
 document.querySelectorAll("[data-close-modal]").forEach((button) => {
@@ -485,42 +492,39 @@ demoForm.addEventListener("submit", async (e) => {
 			setTimeout(async () => {
 				try {
 					// Authenticate with demo credentials
-					const loginResponse = await fetch(
-						"https://demo.wampums.app/public/login",
-						{
-							method: "POST",
-							headers: {
-								"Content-Type": "application/json",
-							},
-							body: JSON.stringify({
-								email: "akela.demo@demo.com",
-								password: "Aylmer2025",
-							}),
-						},
-					);
+                                        const loginResponse = await fetch(demoLoginUrl, {
+                                                method: "POST",
+                                                headers: {
+                                                        "Content-Type": "application/json",
+                                                },
+                                                body: JSON.stringify({
+                                                        email: "akela.demo@demo.com",
+                                                        password: "Aylmer2025",
+                                                }),
+                                        });
 
 					const loginData = await loginResponse.json();
 
-					if (loginResponse.ok && loginData.success && loginData.token) {
-						// Store the token and redirect to the app
-						localStorage.setItem("token", loginData.token);
-						localStorage.setItem("user_role", loginData.user_role);
-						localStorage.setItem("user_full_name", loginData.user_full_name);
-						localStorage.setItem("user_id", loginData.user_id);
+                                        if (loginResponse.ok && loginData.success && loginData.token) {
+                                                // Store the token and redirect to the app
+                                                localStorage.setItem("token", loginData.token);
+                                                localStorage.setItem("user_role", loginData.user_role);
+                                                localStorage.setItem("user_full_name", loginData.user_full_name);
+                                                localStorage.setItem("user_id", loginData.user_id);
 
-						// Redirect to the main app
-						window.location.href = "https://demo.wampums.app/dashboard";
-					} else {
-						// If login fails, just redirect to login page
-						window.location.href = "https://wampums.app/";
-					}
-				} catch (error) {
-					console.error("Error authenticating:", error);
-					// On error, just redirect to login page
-					window.location.href = "https://wampums.app/";
-				}
-			}, 2000);
-		} else {
+                                                // Redirect to the main app
+                                                window.location.href = demoDashboardUrl;
+                                        } else {
+                                                // If login fails, just redirect to login page
+                                                window.location.href = demoLoginUrl;
+                                        }
+                                } catch (error) {
+                                        console.error("Error authenticating:", error);
+                                        // On error, just redirect to login page
+                                        window.location.href = demoLoginUrl;
+                                }
+                        }, 2000);
+                } else {
 			// Show error
 			alert(
 				data.message ||

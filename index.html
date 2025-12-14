@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="fr">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Wampums - Gestion des scouts</title>
+    <meta
+      name="description"
+      content="Application web bilingue pour les scouts : planifier les rencontres, suivre la présence et la progression, gérer les documents et rassurer les parents."
+    />
+
     <!-- Canonical -->
     <link rel="canonical" href="https://wampums.app/" />
 
@@ -12,9 +21,18 @@
     <!-- Robots -->
     <meta name="robots" content="index,follow,max-image-preview:large" />
 
-    <!-- Open Graph (add og:url + og:image) -->
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
     <meta property="og:url" content="https://wampums.app/" />
     <meta property="og:site_name" content="Wampums" />
+    <meta
+      property="og:title"
+      content="Wampums — Gestion bilingue des unités scoutes"
+    />
+    <meta
+      property="og:description"
+      content="Planifiez les réunions, suivez la présence et la progression, partagez les documents et paiements, et gardez les parents informés."
+    />
     <meta
       property="og:image"
       content="https://wampums.app/images/og-wampums-1200x630.jpg"
@@ -28,11 +46,11 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="Wampums — Scout unit management (bilingual)"
+      content="Wampums — Gestion bilingue des scouts"
     />
     <meta
       name="twitter:description"
-      content="Plan meetings, track attendance & badge progress, manage documents, and keep parents informed."
+      content="Planifiez les réunions, suivez les présences et les badges, partagez les documents et gardez les parents informés."
     />
     <meta
       name="twitter:image"
@@ -41,7 +59,7 @@
 
     <!-- PWA / UI polish -->
     <meta name="theme-color" content="#4c65ae" />
-    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="manifest" href="/manifest.json" />
 
     <link rel="stylesheet" href="/landing.css" />
     <script type="application/ld+json">
@@ -126,7 +144,6 @@
         ]
       }
     </script>
-    <title>Wampums - Gestion des scouts</title>
   </head>
   <body>
     <a class="skip-link" href="#main" data-i18n="skip_link"
