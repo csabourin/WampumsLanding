@@ -497,7 +497,6 @@ demoForm.addEventListener("submit", async (e) => {
 						headers: {
 							"Content-Type": "application/json",
 						},
-						credentials: "include",
 						body: JSON.stringify({
 							email: "akela.demo@demo.com",
 							password: "Aylmer2025",
